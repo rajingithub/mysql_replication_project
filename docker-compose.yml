@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mysql_master:
+    image: mysql:8.0
+    container_name: mysql_master
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      # The master's server-id (1) is set in master_conf/master.cnf
+    ports:
+      - "3306:3306"
+    volumes:
+      - master_data:/var/lib/mysql
+      - ./master_conf:/etc/mysql/conf.d # Master's config mount
+    networks:
+      - mysql_replication_net
+
+  mysql_replica1:
+    image: mysql:8.0
+    container_name: mysql_replica1
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      # MYSQL_SERVER_ID: 2 # <-- REMOVE THIS LINE
+    volumes:
+      - replica1_data:/var/lib/mysql
+      - ./replica1_conf:/etc/mysql/conf.d # NEW: Replica1's config mount
+    depends_on:
+      - mysql_master
+    networks:
+      - mysql_replication_net
+
+  mysql_replica2:
+    image: mysql:8.0
+    container_name: mysql_replica2
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      # MYSQL_SERVER_ID: 3 # <-- REMOVE THIS LINE
+    volumes:
+      - replica2_data:/var/lib/mysql
+      - ./replica2_conf:/etc/mysql/conf.d # NEW: Replica2's config mount
+    depends_on:
+      - mysql_master
+    networks:
+      - mysql_replication_net
+
+volumes:
+  master_data:
+  replica1_data:
+  replica2_data:
+
+networks:
+  mysql_replication_net:
+    driver: bridge
