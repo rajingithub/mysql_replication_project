@@ -19,14 +19,16 @@ Note down the follwoing details of the master
 
 eg :
 
-mysql> SHOW MASTER STATUS;
+mysql> SHOW MASTER STATUS;     
+
+`
 +------------------+----------+--------------+------------------+-------------------+
 | File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
 +------------------+----------+--------------+------------------+-------------------+
 | mysql-bin.000003 |      843 | my_database  |                  |                   |
 +------------------+----------+--------------+------------------+-------------------+
 1 row in set (0.00 sec)
-
+`
 
 3. go inside the slave mysql replica and run the following command
 
