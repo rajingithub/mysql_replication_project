@@ -13,7 +13,7 @@ GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';
 FLUSH PRIVILEGES;
 `
 
-Note down the follwoing details of the master
+Note down the following details of the master
 
 `SHOW MASTER STATUS;`
 
@@ -46,3 +46,19 @@ CHANGE REPLICATION SOURCE TO
 see the replica status : 
 
 `SHOW REPLICA STATUS\G`
+
+
+whatever write operations we do on master will be written on the log file `mysql-bin.000003` in the location `/var/lib/mysql` in the master container.
+read replicas will connect to the master database using the above created replica_user and read the write operations written to the logfiles and replicas 
+will syncsame data their database.    
+
+ran follwoing commands on master and the folllowing binlog file content.     
+
+`CREATE TABLE authors (id INT, name VARCHAR(20), email VARCHAR(20));`     
+`INSERT INTO authors (id,name,email) VALUES(1,"Vivek","xuz@abc.com");`       
+`INSERT INTO authors (id,name,email) VALUES(1,"bmr","bmr@abc.com");`    
+
+
+<img width="1512" alt="Screenshot 2025-05-23 at 8 33 01 PM" src="https://github.com/user-attachments/assets/9b7e9e2a-4b96-4098-853b-c44a8d61a29f" />
+
+
